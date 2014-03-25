@@ -16,9 +16,9 @@ Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://guides.rubygems.org/specification-reference/ for more options
   gem.name = "tokfile"
   gem.homepage = "http://github.com/edmundhighcock/tokfile"
-  gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.license = "GPLv3"
+  gem.summary = %Q{A set of tools for testing and manipulating and converting files associated with tokamaks.}
+  gem.description = %Q{A tool for working with common tokamak file formats from tools like EFIT, CHEASE, TRANSP, CRONOS etc. Contains commands for plotting a summary of content, manipulating the data within them and most importantly, converting one format to another.}
   gem.email = "edmundhighcock@users.sourceforge.net"
   gem.authors = ["Edmund Highcock"]
   # dependencies defined in Gemfile
