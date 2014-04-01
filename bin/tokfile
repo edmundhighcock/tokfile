@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+
+begin
+  require 'tokfile'
+rescue LoadError
+  require 'rubygems'
+  require 'tokfile'
+end
+
+CommandLineFlunky.run_script
