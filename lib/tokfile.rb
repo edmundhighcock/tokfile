@@ -91,9 +91,15 @@ class TokFile
 		def setup(copts)
 			# None neededed
 	  end
+		def verbosity
+			2
+		end
 	end
 end
 
+$has_put_startup_message_for_code_runner = true
+require 'coderunner'
+require 'tokfile/eqdsk'
 
 ######################################
 # This must be at the end of the file
