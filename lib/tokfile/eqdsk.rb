@@ -175,6 +175,8 @@ EOF
 		multkit = GraphKit::MultiWindow.new([:pr, :pprime, :t, :ttprime, :q].map{|name|
 			kit = GraphKit.quick_create([psivec, send(name)])
 			kit.title = name.to_s
+			kit.ylabel = nil
+			kit.xlabel = 'psi'
 			kit
 		})
 	  psikit = GraphKit.quick_create([@r, @z, @psi])
@@ -182,6 +184,10 @@ EOF
 		psikit.gp.view = "map"
 		boundkit = GraphKit.quick_create([@rbound, @zbound, @rbound.collect{0.0}])
 		psikit += boundkit
+		psikit.gp.key = "off"
+		psikit.title = 'psi'
+		psikit.xlabel = 'R'
+		psikit.ylabel = 'Z'
 		multkit.push psikit
 		multkit.gp.multiplot = "layout 2,3"
 		multkit
