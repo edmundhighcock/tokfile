@@ -9,8 +9,8 @@ class TokFile::Eqdsk
 		:dummy, :dummy, :dummy, :dummy, :dummy,
 		:t, 
 		:pr, 
-		:pprime, 
 		:ttprime, 
+		:pprime, 
 		:psi, 
 		:q, 
 		:nbound, :nlimiter, 
@@ -22,7 +22,8 @@ class TokFile::Eqdsk
 	require 'scanf'
 	def read(line)
 			#@lines_columns[i] = @lines[i].split(/\s+|(?<=\d)[+-]/).map{|s| eval(s)}
-		line.sub(/\A\s+/, '').sub(/\s+\Z/, '').split(/\s+|(?<=\d)[+-]/).map{|s| eval(s)}
+		line.sub(/\A\s+/, '').sub(/\s+\Z/, '').split(/\s+|(?<=\d)(?=[+-])/).map{|s| eval(s)}
+		#line.scan(/.{15}/).map{|s| eval(s)}
 		
 		#ep ['line', line]
 		#arr = []
@@ -91,7 +92,7 @@ class TokFile::Eqdsk
 			self.class.attr_accessor name
 			case name
 			when :psi
-				set(name, GSL::Matrix.alloc(*data.pieces(@nzbox)))
+				set(name, GSL::Matrix.alloc(*data.pieces(@nzbox)).transpose)
 			when :bound
 				data = data.pieces(@nbound).transpose
 				set(:rbound, data[0].to_gslv)
@@ -109,6 +110,9 @@ class TokFile::Eqdsk
 				end
 			end
 		end
+		@r = GSL::Vector.linspace(@rboxlft, @rboxlft+@rboxlen, @nrbox)
+		@z = GSL::Vector.linspace(-@zboxlen/2.0, @zboxlen/2.0, @nzbox)
+
 		if vb2
 		  Terminal.erewind(1)
 			eputs  "Read total data size of #{total_size.to_f * 8.0/1.0e6} MB"
@@ -165,6 +169,22 @@ EOF
 		#ep ['lines_columns', @lines_columns[1], @lines[1]]
 		
 
+	end
+	def summary_graphkit
+		psivec = GSL::Vector.linspace(@psi.min, @psi.max, @nrbox)
+		multkit = GraphKit::MultiWindow.new([:pr, :pprime, :t, :ttprime, :q].map{|name|
+			kit = GraphKit.quick_create([psivec, send(name)])
+			kit.title = name.to_s
+			kit
+		})
+	  psikit = GraphKit.quick_create([@r, @z, @psi])
+		psikit.data[0].gp.with = 'pm3d'
+		psikit.gp.view = "map"
+		boundkit = GraphKit.quick_create([@rbound, @zbound, @rbound.collect{0.0}])
+		psikit += boundkit
+		multkit.push psikit
+		multkit.gp.multiplot = "layout 2,3"
+		multkit
 	end
   def size(var)
 		case var

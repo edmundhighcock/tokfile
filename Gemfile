@@ -2,6 +2,7 @@ source "http://rubygems.org"
 # Add dependencies required to use your gem here.
 # Example:
    gem "coderunner", ">= 0.14.13"
+   gem "graphkit", ">= 0.3.3"
 	 gem 'command-line-flunky', ">=1.0.0"
 
 # Add dependencies to develop your gem here.

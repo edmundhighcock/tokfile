@@ -99,6 +99,7 @@ end
 
 $has_put_startup_message_for_code_runner = true
 require 'coderunner'
+require 'tokfile/commands'
 require 'tokfile/eqdsk'
 
 ######################################
