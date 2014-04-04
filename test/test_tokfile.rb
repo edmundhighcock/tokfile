@@ -15,7 +15,7 @@ class TestTokfileEqdsk < Test::Unit::TestCase
 		assert_equal(0.5079056676,eq.ttprime[1])
 	end
 	def test_eqdsk_display
-		TokFile.display_summary_graph('test/data/EQDSK', f: 'eqdsk')
+		TokFile.write_summary_graph('test/data/EQDSK', 'eqdsk.ps', f: 'eqdsk')
 
 	end
 	def test_ogyropsi_read
@@ -23,6 +23,10 @@ class TestTokfileEqdsk < Test::Unit::TestCase
 		assert_equal(og.npsi, 41)
 	end
 	def test_ogyropsi_display
-		TokFile.display_summary_graph('test/data/ogyropsi.dat,test/data/ogyropsi.dat', f: 'ogyropsi')
+		TokFile.write_summary_graph('test/data/ogyropsi.dat,test/data/ogyropsi.dat', 'ogyropsi.ps', f: 'ogyropsi')
+	end
+	def test_merge
+		TokFile.merge('test/data/ogyropsi.dat,test/data/ogyropsi_nobal.dat', 'test/data/ogyropsi_out.dat', f: 'ogyropsi', m: 'all,profiles')
+		TokFile.display_summary_graph('test/data/ogyropsi_out.dat,test/data/ogyropsi.dat,test/data/ogyropsi_nobal.dat', f: 'ogyropsi')
 	end
 end
