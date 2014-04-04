@@ -33,6 +33,8 @@ class TokFile::Ogyropsi
 				set(var, val.to_gslv)
 			when @npsi*@nchi
 				set(var, GSL::Matrix.alloc(*val.pieces(@nchi)))
+			else
+				raise "Unknown size for #{var}"
 			end
 			i=j
 		end	
