@@ -23,6 +23,6 @@ class TestTokfileEqdsk < Test::Unit::TestCase
 		assert_equal(og.npsi, 41)
 	end
 	def test_ogyropsi_display
-		TokFile.display_summary_graph('test/data/ogyropsi.dat', f: 'ogyropsi')
+		TokFile.display_summary_graph('test/data/ogyropsi.dat,test/data/ogyropsi.dat', f: 'ogyropsi')
 	end
 end

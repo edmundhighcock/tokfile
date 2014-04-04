@@ -6,8 +6,8 @@ class TokFile
 		# Class methods that implement commands
 		#######################################
 
-		def display_summary_graph(inputfile, copts)
-			summary_graphkit(inputfile, copts).gnuplot
+		def display_summary_graph(inputfiles, copts)
+			summary_graphkit(inputfiles, copts).gnuplot
 		end
 
 		###############################
@@ -26,8 +26,12 @@ class TokFile
 		  end
 		end
 
-		def summary_graphkit(inputfile, copts)
-			file_object(inputfile, copts[:f]).summary_graphkit
+		def summary_graphkit(inputfiles, copts)
+			raise 'Only one format allowed for summary_graphkit ' if copts[:f] =~ /,/
+			inputfiles = inputfiles.split(',')
+			inputfiles.map{|inputfile|
+				file_object(inputfile, copts[:f]).summary_graphkit
+			}.inject{|o,n| o.merge(n)}
 		end
 	end
 end
