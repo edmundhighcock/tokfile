@@ -19,6 +19,8 @@ class TokFile
 			case format
 			when 'eqdsk'
 				TokFile::Eqdsk.new(file)
+			when 'ogyropsi'
+				TokFile::Ogyropsi.new(file)
 			else
 				raise "Can't read this file format yet: #{format}"
 		  end

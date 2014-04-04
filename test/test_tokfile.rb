@@ -18,4 +18,11 @@ class TestTokfileEqdsk < Test::Unit::TestCase
 		TokFile.display_summary_graph('test/data/EQDSK', f: 'eqdsk')
 
 	end
+	def test_ogyropsi_read
+		og = TokFile::Ogyropsi.new('test/data/ogyropsi.dat')
+		assert_equal(og.npsi, 41)
+	end
+	def test_ogyropsi_display
+		TokFile.display_summary_graph('test/data/ogyropsi.dat', f: 'ogyropsi')
+	end
 end

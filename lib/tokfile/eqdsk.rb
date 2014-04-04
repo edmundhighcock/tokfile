@@ -171,7 +171,7 @@ EOF
 
 	end
 	def summary_graphkit
-		psivec = GSL::Vector.linspace(@psi.min, @psi.max, @nrbox)
+		psivec = GSL::Vector.linspace(@psi.min, 0.0, @nrbox)
 		multkit = GraphKit::MultiWindow.new([:pr, :pprime, :t, :ttprime, :q].map{|name|
 			kit = GraphKit.quick_create([psivec, send(name)])
 			kit.title = name.to_s
