@@ -69,14 +69,14 @@ EOF
 		# A GraphKit::MultiKit containing summary information about the 
 		# contents of the file.
 		def summary_graphkit
-			multkit = GraphKit::MultiKit.new([:pr, :dpdpsi, :f, :fdfdpsi, :q, :shear].map{|name|
+			multkit = GraphKit::MultiKit.new([:pr, :dpdpsi, :f, :fdfdpsi, :q, :shear, :ti, :te].map{|name|
 				kit = GraphKit.quick_create([@psi, send(name)])
 				kit.title = name.to_s
 				kit.ylabel = nil
 				kit.xlabel = 'psi'
 				kit
 			})
-		  multkit.gp.multiplot = "layout 2,4"
+		  multkit.gp.multiplot = "layout 3,3"
 			kit = @npsi.times.map{|i| GraphKit.quick_create([@r.col(i), @z.col(i)])}.sum
 			kit.data.each{|dk| dk.gp.with = 'l'}
 			multkit.push kit
