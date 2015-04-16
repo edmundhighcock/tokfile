@@ -55,9 +55,11 @@ class TokFile
 		def summary_graphkit(inputfiles, copts)
 			raise 'Only one format allowed for summary_graphkit ' if copts[:f] =~ /,/
 			inputfiles = inputfiles.split(',')
-			inputfiles.map{|inputfile|
+			kit = inputfiles.map{|inputfile|
 				file_object(inputfile, copts[:f]).summary_graphkit
 			}.inject{|o,n| o.merge(n)}
+      kit.instance_eval(copts[:w]) if copts[:w]
+      kit
 		end
 	end
 end
