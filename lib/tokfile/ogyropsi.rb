@@ -24,7 +24,7 @@ class TokFile::Ogyropsi
 			var = @lines[i].gsub(/\s/, '').downcase.to_sym
 			var = :pr if var == :p
 			j=i+1
-			j+=1 while j < sz and not @lines[j][0] =~ /^\s*[A-Za-z]/
+			j+=1 while j < sz and not @lines[j] =~ /^\s*[A-Za-z]/
 			val = @lines.slice(i+1...j).join(' ').sub(/\A\s+/, '').sub(/\s+\Z/, '').split(/\s+/).map{|s| eval(s)}
 			vsz = val.size
 			total_size += vsz
