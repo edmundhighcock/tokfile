@@ -23,12 +23,13 @@ rescue Bundler::BundlerError => e
   $stderr.puts "Run `bundle install` to install missing gems"
   exit e.status_code
 end
-require 'test/unit'
+require 'minitest/autorun'
 require 'shoulda'
+$VERBOSE=false
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 require 'tokfile'
 
-class Test::Unit::TestCase
-end
+$VERBOSE=false
+

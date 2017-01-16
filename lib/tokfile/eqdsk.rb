@@ -15,7 +15,7 @@ class TokFile::Eqdsk
 		:q, 
 		:nbound, :nlimiter, 
 		:bound,
-	  #:limiter
+	  :limiter
 	]
 	attr_accessor :rbound, :zbound, :rlimiter, :zlimiter
 	
@@ -34,6 +34,15 @@ class TokFile::Eqdsk
 		#arr
 
 	end
+
+  def convert(format)
+    case format
+    when 'eqdsk'
+      self.dup
+    else
+      raise "Conversion from eqdsk to #{format} not implemented yet"
+    end
+  end
 
 
 	def initialize(file)
@@ -75,7 +84,12 @@ class TokFile::Eqdsk
 				#array += read(filehandle.gets)
 				#array += read(lines[i])
 				#i+=1
-				array += read(lines.slice(i...(i+=(sz.to_f/5.0).ceil)).join(' '))
+        begin
+          array += read(lines.slice(i...(i+=(sz.to_f/5.0).ceil)).join(' '))
+        rescue NoMethodError
+          $stderr.puts "Finished reading at #{name}"
+          break
+        end
 				#array += lines.slice(i...(i+=(sz.to_f/5.0).ceil)).join(' ')
 
 				#filehandle.gets.scanf("%e"){|scan| array.push scan[0]}
@@ -104,8 +118,11 @@ class TokFile::Eqdsk
 			else
 				case sz
 				when 1
+          #p [name, 'yy', data]
 					set(name, data[0])
 				else
+          #p [name,'xx', data.inspect[0..2000]]
+          #p [name,data.to_gslv.inspect[0..10]]
 					set(name, data.to_gslv)
 				end
 			end
@@ -169,7 +186,62 @@ EOF
 		#ep ['lines_columns', @lines_columns[1], @lines[1]]
 		
 
+    if not send(:nbound)
+      $stderr.puts("Boundary missing: trying to reconstruct")
+      reconstruct_boundary
+    end
 	end
+  FMT="%16.9e" * 5 + "\n"
+  def write_file(filename)
+    File.open(filename, 'w') do |file|
+      printf(file, " EQDSK GEN.BY TOKFILE %d %d\n", @nrbox, @nzbox)
+      array = []
+      DATANAMES.each do |dname|
+        next if [:zlimiter, :nlimiter].include? dname
+        sz = size(dname)
+        data = sz==1 ? [send(dname)] : send(dname).to_a
+        case dname
+        when :psi
+          data = data.transpose.flatten
+        when :bound
+          data = [send(:rbound).to_a, send(:zbound).to_a].transpose.flatten
+        when :limiter
+          data = [send(:rlimiter).to_a, send(:zlimiter).to_a].transpose.flatten
+        end
+        unless dname==:nbound
+          array += data
+        end
+        #p [dname]
+        while array.size > 5 
+          out = []
+          5.times{out.push(array.shift)}
+          printf(file, FMT, *out)
+        end
+        if [:nbound, :limiter].include? dname
+          # Clear buffer
+          printf(file, FMT, *array)
+          array = []
+        end
+        if dname == :nbound
+          printf(file, "%5d%5d\n", data[0], send(:nlimiter))
+        end
+      end
+    end
+  end
+  def reconstruct_boundary
+    require 'gsl_extras'
+    $stderr.puts "Reconstructing boundary"
+    contour = GSL::Contour.new(@r, @z, @psi)
+	  #psikit = GraphKit.quick_create([@r, @z, @psi])
+		#psikit.data[0].gp.with = 'pm3d'
+		#psikit.gp.view = "map"
+    ck = contour.graphkit(0.0)
+    #psikit+= GraphKit.quick_create([ck.data[0].x.data, ck.data[0].y.data, ck.data[0].y.data.collect{0.0}])
+    #psikit.gnuplot
+    @nbound = @nlimiter = ck.data[0].x.data.size
+    @rbound = @rlimiter = ck.data[0].x.data
+    @zbound = @zlimiter = ck.data[0].y.data
+  end
 	def summary_graphkit
 		psivec = GSL::Vector.linspace(@psi.min, 0.0, @nrbox)
 		multkit = GraphKit::MultiWindow.new([:pr, :pprime, :t, :ttprime, :q].map{|name|

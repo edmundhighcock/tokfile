@@ -41,7 +41,7 @@ EXAMPLES
 EOF
 
   COMMANDS_WITH_HELP = [
-    ['convert', 'cv', 2,  'Convert files of one format into another. Not all file formats contain the same information. If information is missing from the input files, a warning will be printed and tokfile will attempt to fill in the gaps using sensible assumptions like Ti/Te = 1. More than one output file can be specified.', ['inputfile', 'outputfile(s)'], [:f, :t]],
+    ['convert', 'cv', 2,  'Convert files of one format into another. Not all file formats contain the same information. If information is missing from the input files, a warning will be printed and tokfile will attempt to fill in the gaps using sensible assumptions like Ti/Te = 1. More than one output file can be specified. Both the inputfile and outputfile can be the same format, but tokfile will attempt to correct any formatting issues and fill any missing data (e.g. it can add a missing boundary profile to an EQDSK file).', ['inputfile', 'outputfile(s)'], [:f, :t]],
     ['display_summary_graph', 'disp', 1,  'Display a summary graph of the file using gnuplot.', ['inputfile',], [:f]],
     ['merge', 'mg', 2,  'Merge data from two input files to create a single output file. ', ['inputfile', 'outputfile(s)'], [:f, :t, :m]],
     ['write_summary_graph', 'wsg', 2,  'Write a summary graph of the file to disk using gnuplot. The file format is determined by the extension of the graph file', ['inputfile', 'graph file'], [:f,:w]],
@@ -57,6 +57,7 @@ EOF
     ['--formats', '-f', GetoptLong::REQUIRED_ARGUMENT, "A list of formats pertaining to the various input and output files (in the order which they appear), separated by commas. If they are all the same, only one value may be given. If a value is left empty (i.e. there are two commas in a row) then the previous value will be used. Currently supported formats are #{SUPPORTED_FORMATS.inspect}. "],
     ['--merge-sources', '-m', GetoptLong::REQUIRED_ARGUMENT, "A list of which bits of information should come from which input file during a merge. Currently supported merge sources are #{SUPPORTED_MERGE_SOURCES.inspect} "],
     ['--modify-graph', '-w', GetoptLong::REQUIRED_ARGUMENT, "A string of Ruby code which is evaluated by the graphkit before the graph is displayed. Can be used for arbitrary manipulation of the graph. E.g. 'self.title=\"A graph\"; self.gp.logscale = \"y\"' "],
+    ['--time', '-t', GetoptLong::REQUIRED_ARGUMENT, "If one file is time-dependent, gives the time at which to evaluate or convert "],
 
     ]
 
