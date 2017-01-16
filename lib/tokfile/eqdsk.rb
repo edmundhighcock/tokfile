@@ -194,7 +194,7 @@ EOF
   FMT="%16.9e" * 5 + "\n"
   def write_file(filename)
     File.open(filename, 'w') do |file|
-      printf(file, " EQDSK GEN.BY TOKFILE %d %d\n", @nrbox, @nzbox)
+      printf(file, "%48s %3d %5d %5d\n", " EQDSK GEN.BY TOKFILE" , 1, @nrbox, @nzbox)
       array = []
       DATANAMES.each do |dname|
         next if [:zlimiter, :nlimiter].include? dname
