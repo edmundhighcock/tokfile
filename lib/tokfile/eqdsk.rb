@@ -17,7 +17,7 @@ class TokFile::Eqdsk
 		:bound,
 	  :limiter
 	]
-	attr_accessor :rbound, :zbound, :rlimiter, :zlimiter
+	attr_accessor :rbound, :zbound, :rlimiter, :zlimiter, :nbound, :nlimiter, :bound, :limiter
 	
 	require 'scanf'
 	def read(line)
@@ -219,7 +219,7 @@ EOF
         end
         if [:nbound, :limiter].include? dname
           # Clear buffer
-          printf(file, FMT, *array)
+          printf(file, "%16.9e"*array.size + "\n", *array)
           array = []
         end
         if dname == :nbound
