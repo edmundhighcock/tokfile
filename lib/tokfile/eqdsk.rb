@@ -4,7 +4,7 @@ class TokFile::Eqdsk
 	#attr_accessor :rboxlen, :zboxlen, :r0exp, :rboxlft
 	DATANAMES = [
 		:rboxlen, :zboxlen, :r0exp, :rboxlft, :dummy,
-		:raxis, :zaxis, :psiaxis, :dummy, :b0exp,
+		:raxis, :zaxis, :psiaxis, :psisep, :b0exp,
 		:current, :dummy, :dummy, :dummy, :dummy,
 		:dummy, :dummy, :dummy, :dummy, :dummy,
 		:t, 
@@ -243,7 +243,7 @@ EOF
     @zbound = @zlimiter = ck.data[0].y.data
   end
 	def summary_graphkit
-		psivec = GSL::Vector.linspace(@psi.min, 0.0, @nrbox)
+		psivec = GSL::Vector.linspace(psiaxis, psisep, @nrbox)
 		multkit = GraphKit::MultiWindow.new([:pr, :pprime, :t, :ttprime, :q].map{|name|
 			kit = GraphKit.quick_create([psivec, send(name)])
 			kit.title = name.to_s
